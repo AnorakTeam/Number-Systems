@@ -1,0 +1,1 @@
+Since i'm on Linux, i did not upload the javafx jar's (also, github is complaining for large size files), because there are different jars for every OS. So, in order to run the GUI go to https://gluonhq.com/products/javafx/, download the sdk for the OS, extract the compressed file and then paste the content of the folder "lib" in this directory.
