@@ -1,0 +1,4 @@
+/bin/*
+/lib/*.jar
+/lib/*
+!/lib/README.md
