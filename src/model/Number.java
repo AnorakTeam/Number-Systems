@@ -1,7 +1,13 @@
 package model;
 
 /**
+ * Class that handles the numbers and it's conversions in the following numeral systems:
+ * Decimal, Binary, Octal and Hexadecimal.
  * 
+ * In order to create a new number with a String as an argument, the number must be validated
+ * beforehand, otherwise it will create an exception. 
+ * 
+ * @author josemanuelpr@ufps.edu.co
  */
 public class Number implements NumberInterface{
 
@@ -13,18 +19,49 @@ public class Number implements NumberInterface{
     private int number;
     private int type;
 
-    public Number(){}
-
+    /**
+     * Defaults the given integer number to a decimal value.
+     * @param number the decimal value of the number.
+     */
     public Number(int number){
         this.number = number;
         this.type = DECIMAL;
     }
 
+    /**
+     *  Constructor with two parameter for having a number: Given a 
+     *  integer in decimal value that represents any of the following numeral systems: 
+     *  Decimal, Binary, Octal and Hexadecimal, and a number indicating the type it is, 
+     *  creates the object. If the type entered is not between 0 and 3 inclusive, it 
+     *  defaults to a decimal.
+     * 
+     * @param number A valid number as a decimal value from the following numeral 
+     *               systems: Decimal, Binary, Octal or Hexadecimal.
+     * @param type A number between 0 and 3 both inclusive, being 0:decimal, 1:binary,
+     *             2:octal, 3:hex. Instead of hardcoding the number in the call of the constructor,
+     *             use the static values inside this class (e.g Number.HEX)
+     */
     public Number(int number, int type){
         this(number);
-        this.type = type;
+        if( !(0 <= type && type <=3) )
+            type = DECIMAL;
+        else {
+            this.type = type;
+        }
     }
 
+    /**
+     *  Constructor with two parameter for having a number: Given a String that represents
+     *  a valid number in the following systems: Decimal, Binary, Octal, Hexadecimal
+     *  and a number indicating the type it is, creates the object.
+     *  If the type entered is not between 0 and 3 inclusive, it defaults to a decimal.
+     *   
+     * @param number A valid number as a String from the following numeral 
+     *               systems: Decimal, Binary, Octal or Hexadecimal.
+     * @param type A number between 0 and 3 both inclusive, being 0:decimal, 1:binary,
+     *             2:octal, 3:hex. Instead of hardcoding the number in the call of the constructor,
+     *             use the static values inside this class (e.g Number.HEX)
+     */
     public Number(String number, int type){
         this.type = type;
         switch (type) {
@@ -51,7 +88,8 @@ public class Number implements NumberInterface{
         int product = 1;
 
         while(!binary.equals("")){
-            if(binary.charAt(binary.length()-1) == '1'){
+            char nextDigit = binary.charAt(binary.length()-1); 
+            if(nextDigit == '1'){
                 decimal += product;
             }
 
