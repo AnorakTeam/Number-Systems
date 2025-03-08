@@ -38,18 +38,32 @@ public class IEEE754 {
     private long binary = 0;
     private boolean isSimple; 
 
-
+    /**
+     * Creates an object that handles all 32-bit IEEE754 parts with the given decimal number.
+     * @param number Float type number to convert.
+     */
     public IEEE754(float number){
         int simple = Float.floatToRawIntBits(number);
         this.setSimpleIEEE754(simple);
         this.isSimple = true;
     }
 
+    /**
+     * Creates an object that handles all 64-bit IEEE754 parts with the given decimal number.
+     * @param number Double type number to convert.
+     */
     public IEEE754(double number){
         this.binary = Double.doubleToRawLongBits(number);
         this.isSimple = false;
     }
 
+    /**
+     * Creates an object that handles all 64-bit IEEE754 parts with the given binary String 
+     * and a boolean value indicating if it's simple or double precision.
+     * @param number Binary string with 32 or 64 0s and 1s.
+     * @param isSimple Indicates the precision: simple (true) or double (false).
+     * @throws IllegalArgumentException If the given String is not a valid 32 or 64 bit IEEE754 number.
+     */
     public IEEE754(String number, boolean isSimple) throws IllegalArgumentException{
         try{
             this.validateIEE754String(number);
@@ -60,7 +74,13 @@ public class IEEE754 {
         }
     }
 
-    private void validateIEE754String(String number){
+    /**
+     * Checks if the given binary string is valid for a IEEE754 number.
+     * The criteria is the following: The string must contain 32 or 64 characters 
+     * and the string must only contain 0s and 1s.
+     * @throws IllegalArgumentException if one of the criterias above is not met.
+     */
+    private void validateIEE754String(String number) throws IllegalArgumentException{
         if(number.length() != DOUBLE_LENGTH && number.length() != SIMPLE_LENGTH){
             throw new IllegalArgumentException("The number has a different length than a simple/double IEEE754 number.");
         }
@@ -72,6 +92,11 @@ public class IEEE754 {
         }
     }
 
+    /**
+     * Converts the binary String into a long number (the attribute of this object)
+     *  representing either a 32 bit or 64 bit IEEE754 representation.
+     * @param number the String containing the binary number.
+     */
     private void convertIEEE754StringToLong(String number){
         this.binary = 0;
 
@@ -82,11 +107,16 @@ public class IEEE754 {
         }
     }
 
+
     private void setSimpleIEEE754(int number){
         this.binary = this.binary & DOUBLE_UPPER_MASK; // just cleaning the left 32 bits
         this.binary = number;
     }
 
+    /**
+     * Returns a binary string representing the 0s and 1s of the exponent.
+     * @return a String representing the exponent.
+     */
     public String getExponentInBinary(){
         String representation = this.toBinaryRepresentation();
         byte leftBound = 1;
@@ -102,6 +132,10 @@ public class IEEE754 {
         return exponent;
     }
 
+    /**
+     * Returns the exponent of the IEEE754 representation.
+     * @return an integer value representing the exponent.
+     */
     public int getExponentInDecimal(){
         String exponentInString = this.getExponentInBinary();
         short exponentRawValue = 0;
@@ -124,7 +158,10 @@ public class IEEE754 {
         return exponentRawValue - precision;
     }
 
-
+    /**
+     * Returns the sign, "+" or "-", of the number.
+     * @return "+" for positive, "-" for negative.
+     */
     public String getSignInString(){
         String sign = "";
         boolean isPositive;
@@ -144,6 +181,10 @@ public class IEEE754 {
         return sign;
     }
 
+    /**
+     * Returns the leftmost bit of the 32 or 64 bit IEEE754 representation.
+     * @return 0 if positive, 1 if negative.
+     */
     public byte getSignInDecimal(){
         if(this.isSimple){
             return (byte) (this.binary & SIMPLE_SIGN);
@@ -152,6 +193,11 @@ public class IEEE754 {
         }
     }
 
+    /**
+     * Returns the mantissa (decimal part) of the number as a binary string.
+     * The length of the string is 23 for simple precision, or 52 for double.
+     * @return a String containing the 1s and 0s of the mantissa.
+     */
     public String getMantissaInBinary(){
         String representation = this.toBinaryRepresentation();
         byte leftBound;
@@ -167,6 +213,10 @@ public class IEEE754 {
         return mantissa;
     }
 
+    /**
+     * Returns the decimal value of the mantissa (decimal part) as a double.
+     * @return a double value as the decimal part (mantissa)
+     */
     public double getMantissaInDecimal(){
         String mantissaInString = this.getMantissaInBinary();
         double indexDecimalValue = 1;
@@ -185,6 +235,10 @@ public class IEEE754 {
         return mantissa;
     }
 
+    /**
+     * Represents the number as a binary IEEE754 of 32 or 64 bits.
+     * @return a String with 0s and 1s, representing the IEEE754 expression.
+     */
     public String toBinaryRepresentation(){
         String msg = "";
         long copy = this.binary;
@@ -204,18 +258,26 @@ public class IEEE754 {
         return msg;
     }
 
+    /**
+     * Returns the number in the IEEE754 normalized representation:
+     * (+-) (1 + mantissa) * 2 ^ (exponent)
+     * @return a String representing the normalized version of the number.
+     */
     public String toIEEE754NormalizedRepresentation(){
         String rep = "";
-        if(this.getSignInString() == "-"){
-            rep += "-";
-        }
 
+        rep += this.getSignInString();
         rep += this.getMantissaInDecimal()+1;
         rep += " * 2 ^ " + this.getExponentInDecimal();
         
         return rep;
     }
 
+    /**
+     * Returns the representation of both the binary (32 or 64 bits), followed by
+     * " == ", and then the normalized version of the number.
+     * e.g "(binary) == (+-) (1 + mantissa) * 2 ^ (exponent)".
+     */
     @Override
     public String toString(){
         return this.toBinaryRepresentation() + " == " + this.toIEEE754NormalizedRepresentation();
