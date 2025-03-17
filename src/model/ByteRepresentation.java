@@ -22,7 +22,7 @@ public class ByteRepresentation {
     public static final byte[] ISO_IEC_POWERS = {0, 10, 20, 30, 40};
     public static final String[] ISO_IEC_SUFFIX = {"B", "KiB", "MiB", "GiB", "TiB"};
 
-    private final double DECIMAL_ROUNDING = 1000000.0;
+    private final double DECIMAL_ROUNDING = 1000000000.0;
 
     private double amount;
     private byte type;
