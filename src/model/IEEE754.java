@@ -24,9 +24,9 @@ public class IEEE754 {
     private final long SIMPLE_SIGN = Integer.MIN_VALUE;
     private final long DOUBLE_SIGN = Long.MIN_VALUE;
 
-    private final long DOUBLE_UPPER_MASK = -4294967296l; // 32 ones at the right, 32 zeros at the left
+    //private final long DOUBLE_UPPER_MASK = -4294967296l; // 32 ones at the right, 32 zeros at the left
     //private final long DOUBLE_LOWER_MASK = 4294967295l; // the opposite of the upper mask, i don't  
-                                                          // think i will use it, although i'll leave it here
+                                                          // think i will use them, although i'll leave them here
 
     // The length of the simple and double precision numbers, used in the for-loops
     private final int SIMPLE_LENGTH = 32;
@@ -109,8 +109,7 @@ public class IEEE754 {
 
 
     private void setSimpleIEEE754(int number){
-        this.binary = this.binary & DOUBLE_UPPER_MASK; // just cleaning the left 32 bits
-        this.binary = number;
+        this.binary = number; // the 32 rightmost digits become the same as the integer
     }
 
     /**
@@ -273,13 +272,31 @@ public class IEEE754 {
         return rep;
     }
 
+    public double toDecimalValue(){
+        double value = 1;
+
+        value += this.getMantissaInDecimal();
+
+        int exponent = this.getExponentInDecimal();
+        while(exponent > 0){
+            value *= 2;
+            exponent--;
+        }
+
+        if(this.getSignInDecimal() == 1)
+            value = -value;
+        
+        return value;
+    }
+
     /**
-     * Returns the representation of both the binary (32 or 64 bits), followed by
+     * Returns the representation of the decimal value, followed by " == ",
+     * then the binary (32 or 64 bits), followed by
      * " == ", and then the normalized version of the number.
-     * e.g "(binary) == (+-) (1 + mantissa) * 2 ^ (exponent)".
+     * e.g "(decimal) == (binary) == (+-) (1 + mantissa) * 2 ^ (exponent)".
      */
     @Override
     public String toString(){
-        return this.toBinaryRepresentation() + " == " + this.toIEEE754NormalizedRepresentation();
+        return this.toDecimalValue() + " == " + this.toBinaryRepresentation() + " == " + this.toIEEE754NormalizedRepresentation();
     }
 }
