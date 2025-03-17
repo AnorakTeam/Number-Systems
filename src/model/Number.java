@@ -24,6 +24,9 @@ public class Number implements NumberInterface{
      * @param number the decimal value of the number.
      */
     public Number(int number){
+        if(number < 0)
+            throw new IllegalArgumentException("Invalid number: it can't be negative.");
+
         this.number = number;
         this.type = DECIMAL;
     }
@@ -64,6 +67,11 @@ public class Number implements NumberInterface{
      */
     public Number(String number, int type){
         this.type = type;
+
+        if (!this.isValidNumber(number, type)) {
+            throw new IllegalArgumentException("Invalid number format for the specified numeral system.");
+        }
+
         switch (type) {
             case BINARY:
                 this.number = convertBinaryToDecimal(number);
@@ -81,6 +89,65 @@ public class Number implements NumberInterface{
                 this.number = Integer.parseInt(number);
                 break;
         }
+
+        if (this.number < 0) {
+            throw new IllegalArgumentException("Negative numbers are not allowed.");
+        }
+    }
+
+    /**
+     * Validates whether the given string represents a valid number in the specified numeral system.
+     * 
+     * Given a string representing a number and a type indicating the numeral system 
+     * (Decimal, Binary, Octal, or Hexadecimal), this method checks if the number is 
+     * correctly formatted according to its numeral system.
+     * 
+     * Additionally, this method does not allow negative numbers. If the given string contains 
+     * a negative sign, it will be considered invalid.
+     * 
+     * @param number The string representation of the number.
+     * @param type A number between 0 and 3 both inclusive, being 0:decimal, 1:binary, 
+     *             2:octal, 3:hex. Instead of hardcoding the number in the call of this method,
+     *             use the static values inside this class (e.g Number.HEX)
+     * 
+     * @return true if the number is valid for the given numeral system, false otherwise.
+     */
+    private boolean isValidNumber(String number, int type) {
+        if (number == null || number.isEmpty()) {
+            return false;
+        }
+    
+        for (int i = 0; i < number.length(); i++) {
+            char ch = number.charAt(i);
+    
+            switch (type) {
+                case BINARY:
+                    if (ch != '0' && ch != '1') {
+                        return false;
+                    }
+                    break;
+    
+                case OCTAL:
+                    if (ch < '0' || ch > '7') {
+                        return false;
+                    }
+                    break;
+    
+                case HEX:
+                    if (!((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f'))) {
+                        return false;
+                    }
+                    break;
+    
+                default:
+                    if (ch < '0' || ch > '9') {
+                        return false;
+                    }
+                    break;
+            }
+        }
+    
+        return true;
     }
 
     private int convertBinaryToDecimal(String binary){
@@ -223,5 +290,9 @@ public class Number implements NumberInterface{
     @Override
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public int getType(){
+        return this.type;
     }
 }
