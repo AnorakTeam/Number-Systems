@@ -9,7 +9,7 @@ Extension Pack for Java (from Microsoft)
 
 and then everything under this folder that ends with a .jar will work.
 
-Also, although i have uploaded the launch.json settings, it's nice to keep in mind this for 
+Also, although i haven't uploaded the launch.json settings, it's nice to keep in mind this for 
 troubleshooting.
 
 inside the launch.json file, it has to exist a config similar to:
