@@ -493,7 +493,6 @@ void onRepresentIEEERight(ActionEvent event) {
         // bits and bytes tab
         // left side
         typeRepLeftChoiceBox.getItems().addAll("KB", "MB", "GB", "TB", "KiB", "MiB", "GiB", "TiB");
-        System.out.println("Types added");
         representButtonLeft.setDisable(true);
         inputBytesFieldLeft.textProperty().addListener((obs, oldVal, newVal) -> validateByteRepresentationInput());
         typeRepLeftChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> validateByteRepresentationInput());
@@ -538,7 +537,6 @@ void onRepresentIEEERight(ActionEvent event) {
     private void validateByteRepresentationInput() {
         String inputText = inputBytesFieldLeft.getText().trim();
         String choiceValue = typeRepLeftChoiceBox.getValue();
-        System.out.println("Input: \"" + inputText + "\" | Choice: " + choiceValue);
         boolean valid = !inputText.isEmpty() && choiceValue != null;
         representButtonLeft.setDisable(!valid);
     }
